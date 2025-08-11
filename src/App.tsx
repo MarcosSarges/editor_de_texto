@@ -1,35 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import RichTextInput from "./RichTextInput";
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [html, setHtml] = useState<string>("");
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div
+      style={{ display: "flex", flexDirection: "row", gap: 10, padding: 10 }}
+    >
+      <div style={{ flex: 1 }}>
+        <RichTextInput onChange={setHtml} />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      <div
+        dangerouslySetInnerHTML={{ __html: html }}
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          border: "1px solid #ccc",
+          borderRadius: 10,
+        }}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;

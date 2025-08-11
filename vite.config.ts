@@ -10,13 +10,13 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
-          quill: ["quill", "react-quilljs"],
+          quill: ["quill"],
         },
       },
     },
   },
   optimizeDeps: {
-    include: ["react-quilljs", "quill"],
+    include: ["quill"],
   },
   define: {
     global: "globalThis",

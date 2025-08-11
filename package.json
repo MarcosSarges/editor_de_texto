@@ -14,8 +14,7 @@
   "dependencies": {
     "quill": "^2.0.3",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-quilljs": "^2.0.5"
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

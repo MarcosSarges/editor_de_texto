@@ -1,56 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import "quill/dist/quill.snow.css";
-import { useQuill } from "react-quilljs";
-
-const theme = "snow";
+import { Quill, quillConfig } from "./quill-config";
 
 const RichTextInput = ({ onChange }: { onChange: (html: string) => void }) => {
   const [text, setText] = React.useState("");
-  const { quill, quillRef } = useQuill({
-    theme,
-    modules: {
-      toolbar: [
-        // ["bold", "italic", "underline", "strike"],
-        // [{ header: [1, 2, 3, false] }],
-        // [{ list: "ordered" }, { list: "bullet" }],
-        // [{ color: [] }, { background: [] }],
-        // [{ align: [] }],
-        // ["link"],
-        ["bold", "italic", "underline", "strike"], // toggled buttons
-        ["blockquote", "code-block"],
-        ["link", "image", "video", "formula"],
+  const quillRef = React.useRef<HTMLDivElement>(null);
+  const quillInstance = React.useRef<Quill | null>(null);
 
-        [{ header: 1 }, { header: 2 }], // custom button values
-        [{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
-        [{ script: "sub" }, { script: "super" }], // superscript/subscript
-        [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-        [{ direction: "rtl" }], // text direction
-
-        [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-        [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-        [{ font: [] }],
-        [{ align: [] }],
-
-        ["clean"],
-      ],
-    },
-    formats: [
-      "bold",
-      "italic",
-      "underline",
-      "strike",
-      "header",
-      "list",
-      "bullet",
-      "color",
-      "background",
-      "align",
-      "link",
-    ],
-  });
+  React.useEffect(() => {
+    if (quillRef.current && !quillInstance.current) {
+      // Inicializar o Quill
+      quillInstance.current = new Quill(quillRef.current, quillConfig);
+      
+      // Adicionar listener para mudanças de texto
+      quillInstance.current.on("text-change", () => {
+        if (quillInstance.current) {
+          const rawHTML = quillInstance.current.root.innerHTML;
+          setText(rawHTML);
+        }
+      });
+    }
+  }, []);
 
   // Função para converter classes CSS para estilos inline
   const convertToInlineStyles = (html: string) => {
@@ -65,10 +36,6 @@ const RichTextInput = ({ onChange }: { onChange: (html: string) => void }) => {
     console.log("Original HTML:", tempDiv.innerHTML);
     tempDiv.innerHTML = replaceEmToItalic(tempDiv.innerHTML);
     console.log("Change HTML:", tempDiv.innerHTML);
-
-    // tempDiv.innerHTML = tempDiv.querySelectorAll("em").forEach((tag) => {
-    //   tag.innerHTML = tag.innerHTML.replace(/<em>/g, "<i>").replace(/<\/em>/g, "</i>");
-    // });
 
     // Mapear classes do Quill para estilos CSS
     const styleMap: Record<string, string> = {
@@ -157,17 +124,8 @@ const RichTextInput = ({ onChange }: { onChange: (html: string) => void }) => {
   };
 
   React.useEffect(() => {
-    if (quill) {
-      quill.on("text-change", () => {
-        const rawHTML = quill.root.innerHTML;
-        setText(rawHTML);
-      });
-    }
-  }, [quill]);
-
-  React.useEffect(() => {
     onChange(convertToInlineStyles(text));
-  }, [text]);
+  }, [text, onChange]);
 
   return (
     <>

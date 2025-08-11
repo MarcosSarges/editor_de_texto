@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:vercel": "tsc -b && vite build --mode production",
+    "preview": "vite preview",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "quill": "^2.0.3",
@@ -28,5 +30,8 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.0",
     "vite": "^7.1.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
